@@ -1,0 +1,12 @@
+.letter {
+    display: inline-block;
+    width: 20px;
+    border: 1px #cccccc solid;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.letter.used {
+    background-color: lightgray;
+}
