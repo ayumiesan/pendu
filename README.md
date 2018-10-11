@@ -1,3 +1,8 @@
+# Installation
+
+- lancer la commande `npm_install` pour installer les dépendances
+- lancer la commande `npm_start` pour accéder à l'application
+
 # Enoncé de l'exercice : Jeu du Pendu
 
 Le jeu du pendu consiste à faire deviner un mot ou une phrase, en essayant tour à tour des lettres possibles. Chaque essai révèle les lettres correspondantes dans le schéma du texte à deviner.
