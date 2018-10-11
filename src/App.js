@@ -14,6 +14,8 @@ class App extends Component {
         selectedLetters: [],
         matchedIndex: [],
         matchedWord: this.generateWord(),
+        guesses: 0,
+        score: 0,
     };
 
     generateWord() {
@@ -23,18 +25,27 @@ class App extends Component {
     }
 
     handleLetterClick = index => {
-        const { letters, selectedLetters, matchedWord } = this.state;
+        const { letters, selectedLetters, matchedWord, guesses, score } = this.state;
         const letter = letters[index];
 
         if (matchedWord.indexOf(letter) !== -1) {
             if (selectedLetters.indexOf(letter) === -1) {
                 this.updateMatchedLetters(letter);
+                this.setState({ score: score + 2 });
             }
+            else {
+                this.setState({ score: score - 2 });
+            }
+        }
+        else {
+            this.setState({ score: score - 1 });
         }
 
         if (selectedLetters.indexOf(letter) === -1) {
-            this.setState({selectedLetters: [...selectedLetters, ...letter] });
+            this.setState({ selectedLetters: [...selectedLetters, ...letter] });
         }
+
+        this.setState({ guesses: guesses + 1 });
     };
 
     updateMatchedLetters = letter => {
@@ -78,15 +89,17 @@ class App extends Component {
             selectedLetters: [],
             matchedIndex: [],
             matchedWord: this.generateWord(),
+            guesses: 0,
         });
     };
 
     render() {
-        const { letters, matchedWord, matchedIndex } = this.state;
+        const { letters, matchedWord, matchedIndex, guesses, score } = this.state;
         const won = matchedWord.length === matchedIndex.length;
 
         return (
           <div className="pendu">
+              <p>Nombre d'essais effectués : {guesses}</p>
               <div className="word">
                   {matchedWord.map((letter, index) => (
                       <WordLetter
@@ -98,7 +111,11 @@ class App extends Component {
                   ))}
               </div>
               <div className="letters">
-                  {won ? <button className="remake-button" onClick={this.remakeGame}>Redémarrer une partie</button>
+                  {won ?
+                      <div className="remake">
+                          <p>Fin de partie ! Voici votre score : {score}</p>
+                          <button className="remake-button" onClick={this.remakeGame}>Redémarrer une partie</button>
+                      </div>
                     : letters.map((letter, index) => (
                           <Letter
                               letter={letter}
@@ -109,6 +126,25 @@ class App extends Component {
                           />
                     ))
                   }
+                  <div className="score_calculation">
+                        <h2>Calcul du score</h2>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Lettre présente</td>
+                                    <td>+2 points</td>
+                                </tr>
+                                <tr>
+                                    <td>Lettre absente</td>
+                                    <td>-1 point</td>
+                                </tr>
+                                <tr>
+                                    <td>Lettre retentée</td>
+                                    <td>-2 points</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                  </div>
               </div>
           </div>
         );
