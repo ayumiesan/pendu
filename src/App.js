@@ -15,7 +15,9 @@ class App extends Component {
         matchedIndex: [],
         matchedWord: this.generateWord(),
         guesses: 0,
-        score: 0,
+        scores: [0,0],
+        players: ['Joueur 1', 'Joueur 2'],
+        currentPlayer: 0,
     };
 
     generateWord() {
@@ -25,20 +27,26 @@ class App extends Component {
     }
 
     handleLetterClick = index => {
-        const { letters, selectedLetters, matchedWord, guesses, score } = this.state;
+        const { letters, selectedLetters, matchedWord, guesses, scores, currentPlayer } = this.state;
         const letter = letters[index];
+        let newScores = this.state.scores.slice();
 
         if (matchedWord.indexOf(letter) !== -1) {
             if (selectedLetters.indexOf(letter) === -1) {
                 this.updateMatchedLetters(letter);
-                this.setState({ score: score + 2 });
+                newScores[currentPlayer] = scores[currentPlayer] + 2;
+                this.setState({ scores: newScores });
             }
             else {
-                this.setState({ score: score - 2 });
+                newScores[currentPlayer] = scores[currentPlayer] - 2;
+                this.setState({ scores: newScores });
+                this.changePlayer();
             }
         }
         else {
-            this.setState({ score: score - 1 });
+            newScores[currentPlayer] = scores[currentPlayer] - 1;
+            this.setState({ scores: newScores });
+            this.changePlayer();
         }
 
         if (selectedLetters.indexOf(letter) === -1) {
@@ -46,6 +54,12 @@ class App extends Component {
         }
 
         this.setState({ guesses: guesses + 1 });
+    };
+
+    changePlayer = event => {
+        const { currentPlayer } = this.state;
+
+        this.setState({ currentPlayer: currentPlayer === 0 ? 1 : 0 });
     };
 
     updateMatchedLetters = letter => {
@@ -90,16 +104,21 @@ class App extends Component {
             matchedIndex: [],
             matchedWord: this.generateWord(),
             guesses: 0,
+            scores: [0,0],
+            players: ['Joueur 1', 'Joueur 2'],
+            currentPlayer: 0,
         });
     };
 
     render() {
-        const { letters, matchedWord, matchedIndex, guesses, score } = this.state;
+        const { letters, matchedWord, matchedIndex, guesses, scores, players, currentPlayer } = this.state;
         const won = matchedWord.length === matchedIndex.length;
+        const winner = scores[0] > scores[1] ? players[0] : players[1];
 
         return (
           <div className="pendu">
               <p>Nombre d'essais effectués : {guesses}</p>
+              <p>{players[currentPlayer]} à vous de jouer !</p>
               <div className="word">
                   {matchedWord.map((letter, index) => (
                       <WordLetter
@@ -113,7 +132,9 @@ class App extends Component {
               <div className="letters">
                   {won ?
                       <div className="remake">
-                          <p>Fin de partie ! Voici votre score : {score}</p>
+                          <p>Le gagnant est <b>{winner}</b>! Voici les scores :</p>
+                          <p>{players[0]} : {scores[0]}</p>
+                          <p>{players[1]} : {scores[1]}</p>
                           <button className="remake-button" onClick={this.remakeGame}>Redémarrer une partie</button>
                       </div>
                     : letters.map((letter, index) => (
