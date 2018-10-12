@@ -1,7 +1,7 @@
 # Installation
 
-- lancer la commande `npm_install` pour installer les dépendances
-- lancer la commande `npm_start` pour accéder à l'application
+- lancer la commande `npm install` pour installer les dépendances
+- lancer la commande `npm start` pour accéder à l'application
 
 # Enoncé de l'exercice : Jeu du Pendu
 
