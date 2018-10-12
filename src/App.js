@@ -110,6 +110,23 @@ class App extends Component {
         });
     };
 
+    handleKeyDown = (event) => {
+        const {letters} = this.state;
+        const index = letters.indexOf(event.key.toUpperCase());
+
+        if (index !== -1) {
+            this.handleLetterClick(index);
+        }
+    };
+
+    componentDidMount() {
+        document.addEventListener("keydown", this.handleKeyDown, false);
+    };
+
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.handleKeyDown, false);
+    };
+
     render() {
         const { letters, matchedWord, matchedIndex, guesses, scores, players, currentPlayer } = this.state;
         const won = matchedWord.length === matchedIndex.length;
@@ -137,15 +154,19 @@ class App extends Component {
                           <p>{players[1]} : {scores[1]}</p>
                           <button className="remake-button" onClick={this.remakeGame}>Redémarrer une partie</button>
                       </div>
-                    : letters.map((letter, index) => (
-                          <Letter
-                              letter={letter}
-                              feedback={this.getFeedbackForLetter(index)}
-                              index={index}
-                              key={index}
-                              onClick={this.handleLetterClick}
-                          />
-                    ))
+                    :
+                      <div>
+                          <p>Cliquez sur une lettre ou tapez une lettre sur votre clavier !</p>
+                          {letters.map((letter, index) => (
+                              <Letter
+                                  letter={letter}
+                                  feedback={this.getFeedbackForLetter(index)}
+                                  index={index}
+                                  key={index}
+                                  onClick={this.handleLetterClick}
+                              />
+                          ))}
+                      </div>
                   }
                   <div className="score_calculation">
                         <h2>Calcul du score</h2>
